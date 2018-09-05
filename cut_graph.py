@@ -11,6 +11,12 @@ def main(args):
     # get input file -- should be output from sbn -m SBNOsc_NuMuSelection
     input_file = ROOT.TFile(args.input)
     input_graph = input_file.Get("Graph")
+
+    # print them if specified
+    if args.print_data:
+        for cut, i in zip(cuts, range(input_graph.GetN())):
+            print cut, input_graph.GetY()[i]
+            
     # plot them
     plot(args, input_graph)
         
@@ -45,4 +51,5 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input", required=True)
     parser.add_argument("-w", "--wait", action="store_true")
     parser.add_argument("-o", "--output", default=None)
+    parser.add_argument("-p", "--print_data", action="store_true")
     main(parser.parse_args())
