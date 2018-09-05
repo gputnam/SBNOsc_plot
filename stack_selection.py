@@ -21,11 +21,11 @@ def build_histos(tree, energy_name):
         reco_interactions = entry.events.reco
         reco_info = entry.numu_interaction
         for (interaction, info) in zip(reco_interactions, reco_info):
-            energy = getattr(interaction.neutrino, energy_name)
+            energy = getattr(interaction.truth.neutrino, energy_name)
             pdgid = info.t_pdgid
             if pdgid == 13:
                 muon_histo.Fill(energy)
-            elif pdgid == 211:
+            elif abs(pdgid) == 211:
                 pion_histo.Fill(energy)
             else: 
                 assert(False) # should only have muons and pions
