@@ -24,7 +24,7 @@ def get_data(tfile):
     nbkg = 0
     for event in tfile.Get("sbnana"):
         for interaction in event.numu_interaction:
-            if interaction.t_pdgid == 13:
+            if abs(interaction.t_pdgid) == 13:
                 nsignal += 1
             elif abs(interaction.t_pdgid) == 211:
                 nbkg += 1
@@ -45,9 +45,10 @@ def get_errors(baseline, data):
 def print_SN(data):
     for Lname, (S, B) in zip(Lnames, data):
         if B != 0:
-            print "%s: %i %i %f" % (Lname, S, B, S / math.sqrt(B))
+            print ("%s: %i %i %f" % (Lname, S, B, S / math.sqrt(B))),
         else:
-            print "%s: %i %i" % (Lname, S, B)
+            print ("%s: %i %i" % (Lname, S, B)),
+        print "Contamination: %f" % (float(B) / S)
         
 def plot(args, ratios, errs):
     canvas = ROOT.TCanvas("canvas", "Selection Canvas", 250,100,700,500)

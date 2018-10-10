@@ -5,7 +5,7 @@ from array import array
 import argparse
 import math
 
-cuts = ["Initial", "Track", "FV", "Length", "Vertex-Match"]
+cuts = ["Initial", "Track", "FV", "Length", "Vertex-Match", "AV Only"]
 
 def main(args):
     # get input file -- should be output from sbn -m SBNOsc_NuMuSelection

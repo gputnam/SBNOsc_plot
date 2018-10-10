@@ -21,7 +21,7 @@ def get_data(tfile):
     nbkg = 0
     for event in tfile.Get("sbnana"):
         for interaction in event.numu_interaction:
-            if interaction.t_pdgid == 13:
+            if abs(interaction.t_pdgid) == 13:
                 nsignal += 1
             elif abs(interaction.t_pdgid) == 211:
                 nbkg += 1
@@ -38,14 +38,23 @@ def print_SN(data):
         
 def plot(args, data):
     canvas = ROOT.TCanvas("canvas", "Selection Canvas", 250,100,700,500)
-    graph = ROOT.TGraphErrors(len(data))
+    ydata = []
+    yerr = []
     for i,(name, length, (S, B)) in enumerate(zip(Lnames, Ls, data)):
+        if B == 0:
+            print "Warning: cut %s has zero background, skipping..." % name
+            continue
         sig = S / math.sqrt(B)
+        err_S2 = S / B
+        err_B = S / (2 * B)
+        err = math.sqrt(err_S2 + err_B * err_B) 
+        ydata.append(sig)
+        yerr.append(err)
+
+    graph = ROOT.TGraphErrors(len(ydata))
+    for i,(length, sig, err) in enumerate(zip(Ls, ydata, yerr)):
         graph.SetPoint(i, length, sig)
         if args.errors:
-            err_S2 = S / B
-            err_B = S / (2 * B)
-            err = math.sqrt(err_S2 + err_B * err_B) 
             graph.SetPointError(i, 0, err)
        
     graph.Draw()
